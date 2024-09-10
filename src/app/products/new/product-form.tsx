@@ -4,15 +4,21 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useForm } from 'react-hook-form';
 import { createProduct } from '../products.api';
-
+import { useRouter } from 'next/navigation';
 
 export default function ProductForm() {
 
 	const { register, handleSubmit } = useForm();
+	const router = useRouter();
 
 	const onSubmit = handleSubmit(async(data) => {
 		console.log(data);
-		await createProduct(data);
+		await createProduct({
+			...data,
+			price: parseFloat(data.price),
+		});
+		router.push('/');
+		router.refresh();
 	})
 	return (
 		<div>
@@ -27,7 +33,7 @@ export default function ProductForm() {
 					/>
 					<Label>Price</Label>
 					<Input 
-						{...register('Price')}
+						{...register('price')}
 
 					/>
 					<Label>Image</Label>
